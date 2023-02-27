@@ -5,7 +5,17 @@ import {
 
 import KeyboardKey from "./KeyboardKey";
 
-export default function Keyboard() {
+interface KeyBoardProps {
+    onCharacterClick: (char: string) => void;
+    onEnterClick: () => void;
+    onBackspaceClick: () => void;
+}
+
+export default function Keyboard({
+    onCharacterClick,
+    onEnterClick,
+    onBackspaceClick,
+}: KeyBoardProps) {
     return (
         <div className="grid grid-cols-1 grid-rows-3 gap-4">
             {KEYBOARD_KEYS.map((row, idx) => (
@@ -22,8 +32,9 @@ export default function Keyboard() {
                                     aria-label="Enter"
                                     title="Enter"
                                     key={id}
+                                    onClick={onEnterClick}
                                 >
-                                    <span>
+                                    <span className="pointer-events-none">
                                         <EnterIcon className="w-6 h-6" />
                                     </span>
                                 </KeyboardKey>
@@ -34,8 +45,9 @@ export default function Keyboard() {
                                     aria-label="Backspace"
                                     title="Backspace"
                                     key={id}
+                                    onClick={onBackspaceClick}
                                 >
-                                    <span>
+                                    <span className="pointer-events-none">
                                         <BackspaceIcon className="w-6 h-6" />
                                     </span>
                                 </KeyboardKey>
@@ -47,6 +59,7 @@ export default function Keyboard() {
                                 aria-label={char}
                                 title={char}
                                 key={id}
+                                onClick={() => onCharacterClick(char)}
                             >
                                 {char}
                             </KeyboardKey>
