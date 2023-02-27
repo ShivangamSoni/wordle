@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import {
     PaperAirplaneIcon as EnterIcon,
     BackspaceIcon,
@@ -16,6 +18,24 @@ export default function Keyboard({
     onEnterClick,
     onBackspaceClick,
 }: KeyBoardProps) {
+    useEffect(() => {
+        function handler(e: KeyboardEvent) {
+            const { altKey, ctrlKey, metaKey, shiftKey, key } = e;
+            const withKey = altKey || ctrlKey || metaKey || shiftKey;
+
+            if (!withKey && key.length === 1 && key.match(/^[a-zA-z]{1,1}$/)) {
+                onCharacterClick(key);
+            } else if (key === "Enter") {
+                onEnterClick();
+            } else if (key === "Backspace") {
+                onBackspaceClick();
+            }
+        }
+
+        document.addEventListener("keydown", handler);
+        return () => document.removeEventListener("keydown", handler);
+    }, [onCharacterClick, onEnterClick, onBackspaceClick]);
+
     return (
         <div className="grid grid-cols-1 grid-rows-3 gap-4">
             {KEYBOARD_KEYS.map((row, idx) => (
