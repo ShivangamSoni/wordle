@@ -15,7 +15,6 @@ import Keyboard from "./components/Keyboard";
 
 export default function App() {
     const dispatch = useAppDispatch();
-    const guesses = useAppSelector(selectGuesses);
     const currentGuess = useAppSelector(selectCurrentGuess);
     const selectedWord = useAppSelector(selectSelectedWord);
     const guessNumber = useAppSelector(selectGuessNumber);
@@ -67,7 +66,7 @@ export default function App() {
 
     return (
         <main className="flex flex-col items-center justify-between p-4 min-h-screen">
-            <GuessGrid guesses={guesses} />
+            <GuessGrid />
             <Keyboard
                 onCharacterClick={onCharacter}
                 onBackspaceClick={onBackspace}

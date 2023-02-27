@@ -1,14 +1,16 @@
+import { selectGuesses } from "../Redux/wordle/wordleSlice";
+import { useAppSelector } from "../hooks/Redux";
+
 import GuessTile from "./GuessTile";
 
-interface GuessGridProps {
-    guesses: string[][];
-}
+export default function GuessGrid() {
+    const guesses = useAppSelector(selectGuesses);
 
-export default function GuessGrid({ guesses }: GuessGridProps) {
     return (
         <div className="grid grid-cols-1 gap-4">
             {guesses.map((word, row) => {
                 const wordStr = word.join("");
+
                 return (
                     <div
                         key={`${row}-${wordStr}`}
@@ -19,6 +21,7 @@ export default function GuessGrid({ guesses }: GuessGridProps) {
                             <GuessTile
                                 key={`${row}-${cell}-${char}`}
                                 cellIndex={cell}
+                                rowIndex={row}
                             >
                                 {char}
                             </GuessTile>

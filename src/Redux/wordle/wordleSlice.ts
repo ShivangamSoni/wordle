@@ -68,6 +68,7 @@ export const wordleSlice = createSlice({
 export const { startGame, endGame, typeCharacter, deleteCharacter, nextGuess } =
     wordleSlice.actions;
 
+export const selectPlaying = (state: RootState) => state.wordle.playing;
 export const selectGuesses = (state: RootState) => state.wordle.guesses;
 export const selectSelectedWord = (state: RootState) => state.wordle.selected;
 export const selectCurrentGuess = (state: RootState) => {
