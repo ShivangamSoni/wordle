@@ -20,8 +20,8 @@ export default function Keyboard({
 }: KeyBoardProps) {
     useEffect(() => {
         function handler(e: KeyboardEvent) {
-            const { altKey, ctrlKey, metaKey, shiftKey, key } = e;
-            const withKey = altKey || ctrlKey || metaKey || shiftKey;
+            const { altKey, ctrlKey, metaKey, key } = e;
+            const withKey = altKey || ctrlKey || metaKey;
 
             if (!withKey && key.length === 1 && key.match(/^[a-zA-z]{1,1}$/)) {
                 onCharacterClick(key);
