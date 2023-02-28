@@ -28,7 +28,7 @@ export const wordleSlice = createSlice({
     initialState,
     reducers: {
         startGame: (state) => {
-            state = initialState;
+            return initialState;
         },
         endGame: (state) => {
             state.playing = false;
@@ -62,7 +62,6 @@ export const wordleSlice = createSlice({
             state.current.character = 0;
         },
     },
-    extraReducers: {},
 });
 
 export const { startGame, endGame, typeCharacter, deleteCharacter, nextGuess } =

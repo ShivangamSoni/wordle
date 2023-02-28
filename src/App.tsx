@@ -9,9 +9,11 @@ import {
     selectSelectedWord,
     typeCharacter,
 } from "./Redux/wordle/wordleSlice";
+import { pushNotification } from "./Redux/notification/notificationSlice";
 
 import GuessGrid from "./components/GuessGrid";
 import Keyboard from "./components/Keyboard";
+import Notification from "./components/Notification";
 
 export default function App() {
     const dispatch = useAppDispatch();
@@ -29,7 +31,12 @@ export default function App() {
 
     async function onEnter() {
         if (currentGuess.length < 5) {
-            alert("Not Enough Letters");
+            dispatch(
+                pushNotification({
+                    message: "Not Enough Letters",
+                    type: "error",
+                }),
+            );
             return;
         }
 
@@ -42,20 +49,35 @@ export default function App() {
                 throw Error;
             }
         } catch (e) {
-            alert(`"${currentGuess}" is not a Word`);
+            dispatch(
+                pushNotification({
+                    message: `"${currentGuess.toUpperCase()}" is not a Word`,
+                    type: "error",
+                }),
+            );
             return;
         }
 
-        // If Matched then SHow Winner & End Game
+        // If Matched then Show Winner & End Game
         if (currentGuess.toLowerCase() === selectedWord.toLowerCase()) {
-            alert(`You Win: The Word was ${selectedWord}`);
+            dispatch(
+                pushNotification({
+                    message: `You Win: The Word was "${selectedWord.toUpperCase()}"`,
+                    type: "success",
+                }),
+            );
             dispatch(endGame());
             return;
         }
 
         // If guesses Done Show Loser, Show Word & End Game
         if (guessNumber + 1 >= 6) {
-            alert(`No More Guesses Left. Word was ${selectedWord}`);
+            dispatch(
+                pushNotification({
+                    message: `No More Guesses Left. Word was "${selectedWord.toUpperCase()}"`,
+                    type: "error",
+                }),
+            );
             dispatch(endGame());
             return;
         }
@@ -72,6 +94,8 @@ export default function App() {
                 onBackspaceClick={onBackspace}
                 onEnterClick={onEnter}
             />
+
+            <Notification />
         </main>
     );
 }

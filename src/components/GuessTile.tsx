@@ -31,14 +31,14 @@ export default function GuessTile({
     if ((!playing && rowIndex <= currentGuessIndex) || (rowDone && included)) {
         if (positionCorrect) {
             style = "bg-emerald-400";
-        } else {
+        } else if (included) {
             style = "bg-amber-300";
         }
     }
 
     return (
         <span
-            className={`bg-slate-800 text-white font-bold uppercase p-4 w-4 h-4 flex items-center justify-center ${style}`}
+            className={`text-white font-bold uppercase p-4 w-4 h-4 flex items-center justify-center ${style}`}
         >
             {children}
         </span>
