@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { getRandomWord } from "../../data/words";
 
 interface WordleState {
     playing: boolean;
+    won: boolean;
     selected: string;
     guesses: string[][];
     current: {
@@ -13,7 +15,8 @@ interface WordleState {
 
 const initialState: WordleState = {
     playing: true,
-    selected: "brick",
+    won: false,
+    selected: getRandomWord().toLowerCase(),
     guesses: Array.from({ length: 6 }, (_) =>
         Array.from({ length: 5 }, (_) => ""),
     ),
@@ -28,10 +31,15 @@ export const wordleSlice = createSlice({
     initialState,
     reducers: {
         startGame: (state) => {
-            return initialState;
+            return {
+                ...initialState,
+                selected: getRandomWord().toLowerCase(),
+                playing: true,
+            };
         },
-        endGame: (state) => {
+        endGame: (state, action: PayloadAction<boolean>) => {
             state.playing = false;
+            state.won = action.payload;
         },
         typeCharacter: (state, action: PayloadAction<string>) => {
             const char = action.payload.toLowerCase();
@@ -68,6 +76,7 @@ export const { startGame, endGame, typeCharacter, deleteCharacter, nextGuess } =
     wordleSlice.actions;
 
 export const selectPlaying = (state: RootState) => state.wordle.playing;
+export const selectWon = (state: RootState) => state.wordle.won;
 export const selectGuesses = (state: RootState) => state.wordle.guesses;
 export const selectSelectedWord = (state: RootState) => state.wordle.selected;
 export const selectCurrentGuess = (state: RootState) => {

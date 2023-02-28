@@ -6,6 +6,7 @@ import {
     selectCurrentGuess,
     selectGuesses,
     selectGuessNumber,
+    selectPlaying,
     selectSelectedWord,
     typeCharacter,
 } from "./Redux/wordle/wordleSlice";
@@ -14,9 +15,11 @@ import { pushNotification } from "./Redux/notification/notificationSlice";
 import GuessGrid from "./components/GuessGrid";
 import Keyboard from "./components/Keyboard";
 import Notification from "./components/Notification";
+import ResultModal from "./components/ResultModal";
 
 export default function App() {
     const dispatch = useAppDispatch();
+    const playing = useAppSelector(selectPlaying);
     const currentGuess = useAppSelector(selectCurrentGuess);
     const selectedWord = useAppSelector(selectSelectedWord);
     const guessNumber = useAppSelector(selectGuessNumber);
@@ -60,13 +63,7 @@ export default function App() {
 
         // If Matched then Show Winner & End Game
         if (currentGuess.toLowerCase() === selectedWord.toLowerCase()) {
-            dispatch(
-                pushNotification({
-                    message: `You Win: The Word was "${selectedWord.toUpperCase()}"`,
-                    type: "success",
-                }),
-            );
-            dispatch(endGame());
+            dispatch(endGame(true));
             return;
         }
 
@@ -74,11 +71,11 @@ export default function App() {
         if (guessNumber + 1 >= 6) {
             dispatch(
                 pushNotification({
-                    message: `No More Guesses Left. Word was "${selectedWord.toUpperCase()}"`,
+                    message: `No More Guesses Left.`,
                     type: "error",
                 }),
             );
-            dispatch(endGame());
+            dispatch(endGame(false));
             return;
         }
 
@@ -88,12 +85,16 @@ export default function App() {
 
     return (
         <main className="flex flex-col items-center justify-between p-4 min-h-screen">
-            <GuessGrid />
-            <Keyboard
-                onCharacterClick={onCharacter}
-                onBackspaceClick={onBackspace}
-                onEnterClick={onEnter}
-            />
+            <>
+                <GuessGrid />
+                <Keyboard
+                    onCharacterClick={onCharacter}
+                    onBackspaceClick={onBackspace}
+                    onEnterClick={onEnter}
+                />
+            </>
+
+            {!playing && <ResultModal />}
 
             <Notification />
         </main>
