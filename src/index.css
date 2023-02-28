@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.tileContent {
+    transition: transform 500ms linear;
+    transform-style: preserve-3d;
+}
+
+.tileContent.active {
+    transform: rotateX(180deg);
+}
+
+.tileContent > div {
+    backface-visibility: hidden;
+}

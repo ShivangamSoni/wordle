@@ -27,20 +27,24 @@ export default function GuessTile({
     const positionCorrect =
         selectedWord[cellIndex].toLowerCase() === children.toLowerCase();
 
-    let style = "bg-slate-800";
+    let style = "";
     if ((!playing && rowIndex <= currentGuessIndex) || (rowDone && included)) {
+        style = "active ";
         if (positionCorrect) {
-            style = "bg-emerald-400";
+            style += "bg-emerald-400";
         } else if (included) {
-            style = "bg-amber-300";
+            style += "bg-amber-300";
         }
     }
 
     return (
-        <span
-            className={`text-white font-bold uppercase p-4 w-4 h-4 flex items-center justify-center ${style}`}
-        >
-            {children}
-        </span>
+        <div className="relative p-5">
+            <div className={`absolute inset-0 tileContent ${style}`}>
+                <div className="absolute inset-0 bg-slate-900"></div>
+            </div>
+            <span className="absolute inset-0 text-white font-bold uppercase flex items-center justify-center">
+                {children}
+            </span>
+        </div>
     );
 }
