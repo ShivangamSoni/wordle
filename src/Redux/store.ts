@@ -10,7 +10,7 @@ export const store = configureStore({
         notification: notificationReducer,
         site: siteReducer,
     },
-    devTools: true,
+    devTools: import.meta.env.DEV,
 });
 
 export type RootState = ReturnType<typeof store.getState>;
