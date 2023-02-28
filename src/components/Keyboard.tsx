@@ -6,6 +6,8 @@ import {
 } from "@heroicons/react/24/outline";
 
 import KeyboardKey from "./KeyboardKey";
+import { useAppSelector } from "../hooks/Redux";
+import { selectGameState } from "../Redux/wordle/wordleSlice";
 
 interface KeyBoardProps {
     onCharacterClick: (char: string) => void;
@@ -18,8 +20,12 @@ export default function Keyboard({
     onEnterClick,
     onBackspaceClick,
 }: KeyBoardProps) {
+    const gameState = useAppSelector(selectGameState);
+
     useEffect(() => {
         function handler(e: KeyboardEvent) {
+            if (gameState !== "playing") return;
+
             const { altKey, ctrlKey, metaKey, key } = e;
             const withKey = altKey || ctrlKey || metaKey;
 
@@ -34,7 +40,7 @@ export default function Keyboard({
 
         document.addEventListener("keydown", handler);
         return () => document.removeEventListener("keydown", handler);
-    }, [onCharacterClick, onEnterClick, onBackspaceClick]);
+    }, [onCharacterClick, onEnterClick, onBackspaceClick, gameState]);
 
     return (
         <div className="grid grid-cols-1 grid-rows-3 gap-1 md:gap-2 lg:gap-4">

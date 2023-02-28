@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import { useAppDispatch, useAppSelector } from "./hooks/Redux";
 import {
     deleteCharacter,
@@ -6,7 +8,7 @@ import {
     typeCharacter,
     selectCurrentGuess,
     selectGuessNumber,
-    selectPlaying,
+    selectGameState,
     selectSelectedWord,
 } from "./Redux/wordle/wordleSlice";
 import { pushNotification } from "./Redux/notification/notificationSlice";
@@ -17,14 +19,24 @@ import Keyboard from "./components/Keyboard";
 import Notification from "./components/Notification";
 import ResultModal from "./components/ResultModal";
 import Header from "./components/Header";
+import Modal from "./components/Modal";
 
 export default function App() {
     const dispatch = useAppDispatch();
-    const playing = useAppSelector(selectPlaying);
+    const gameState = useAppSelector(selectGameState);
     const currentGuess = useAppSelector(selectCurrentGuess);
     const selectedWord = useAppSelector(selectSelectedWord);
     const guessNumber = useAppSelector(selectGuessNumber);
     const themeMode = useAppSelector(selectMode);
+
+    useEffect(() => {
+        const body = document.body;
+        if (themeMode === "dark") {
+            body.classList.add("dark");
+        } else {
+            body.classList.remove("dark");
+        }
+    }, [themeMode]);
 
     function onCharacter(char: string) {
         dispatch(typeCharacter(char));
@@ -86,20 +98,23 @@ export default function App() {
     }
 
     return (
-        <div className={`${themeMode === "dark" ? "dark" : ""}`}>
-            <div className="grid grid-rows-[auto,1fr] gap-8 md:gap-16 p-4 min-h-screen bg-white dark:bg-black">
-                <Header />
-                <main className="flex flex-col items-center justify-between gap-8 md:gap-16">
-                    <GuessGrid />
-                    <Keyboard
-                        onCharacterClick={onCharacter}
-                        onBackspaceClick={onBackspace}
-                        onEnterClick={onEnter}
-                    />
-                </main>
-                {!playing && <ResultModal />}
-                <Notification />
-            </div>
+        <div className="grid grid-rows-[auto,1fr] gap-8 md:gap-16 p-4 min-h-screen bg-white dark:bg-black">
+            <Header />
+            <main className="flex flex-col items-center justify-between gap-8 md:gap-16">
+                <GuessGrid />
+                <Keyboard
+                    onCharacterClick={onCharacter}
+                    onBackspaceClick={onBackspace}
+                    onEnterClick={onEnter}
+                />
+            </main>
+
+            {(gameState === "won" || gameState === "lost") && (
+                <Modal>
+                    <ResultModal />
+                </Modal>
+            )}
+            <Notification />
         </div>
     );
 }

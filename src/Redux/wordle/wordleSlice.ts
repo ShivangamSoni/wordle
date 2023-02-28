@@ -3,8 +3,7 @@ import { RootState } from "../store";
 import { getRandomWord } from "../../data/words";
 
 interface WordleState {
-    playing: boolean;
-    won: boolean;
+    state: "playing" | "paused" | "won" | "lost";
     selected: string;
     guesses: string[][];
     current: {
@@ -14,8 +13,7 @@ interface WordleState {
 }
 
 const initialState: WordleState = {
-    playing: true,
-    won: false,
+    state: "paused",
     selected: getRandomWord().toLowerCase(),
     guesses: Array.from({ length: 6 }, (_) =>
         Array.from({ length: 5 }, (_) => ""),
@@ -34,12 +32,17 @@ export const wordleSlice = createSlice({
             return {
                 ...initialState,
                 selected: getRandomWord().toLowerCase(),
-                playing: true,
+                state: "playing",
             };
         },
         endGame: (state, action: PayloadAction<boolean>) => {
-            state.playing = false;
-            state.won = action.payload;
+            state.state = action.payload ? "won" : "lost";
+        },
+        pauseGame: (state) => {
+            state.state = "paused";
+        },
+        resumeGame: (state) => {
+            state.state = "playing";
         },
         typeCharacter: (state, action: PayloadAction<string>) => {
             const char = action.payload.toLowerCase();
@@ -72,11 +75,17 @@ export const wordleSlice = createSlice({
     },
 });
 
-export const { startGame, endGame, typeCharacter, deleteCharacter, nextGuess } =
-    wordleSlice.actions;
+export const {
+    startGame,
+    endGame,
+    pauseGame,
+    resumeGame,
+    typeCharacter,
+    deleteCharacter,
+    nextGuess,
+} = wordleSlice.actions;
 
-export const selectPlaying = (state: RootState) => state.wordle.playing;
-export const selectWon = (state: RootState) => state.wordle.won;
+export const selectGameState = (state: RootState) => state.wordle.state;
 export const selectGuesses = (state: RootState) => state.wordle.guesses;
 export const selectSelectedWord = (state: RootState) => state.wordle.selected;
 export const selectCurrentGuess = (state: RootState) => {

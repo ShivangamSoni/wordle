@@ -1,39 +1,26 @@
-import {
-    selectGuessNumber,
-    selectPlaying,
-    selectSelectedWord,
-} from "../Redux/wordle/wordleSlice";
-import { useAppSelector } from "../hooks/Redux";
-
 interface GuessTileProps {
     children: string;
-    cellIndex: number;
-    rowIndex: number;
+    rowDone: boolean;
+    included: boolean;
+    positionCorrect: boolean;
 }
 
 export default function GuessTile({
     children,
-    cellIndex,
-    rowIndex,
+    rowDone,
+    included,
+    positionCorrect,
 }: GuessTileProps) {
-    const playing = useAppSelector(selectPlaying);
-    const currentGuessIndex = useAppSelector(selectGuessNumber);
-    const selectedWord = useAppSelector(selectSelectedWord);
-
-    const rowDone = rowIndex < currentGuessIndex;
-    const included =
-        children.toLocaleLowerCase() !== "" &&
-        selectedWord.includes(children.toLowerCase());
-    const positionCorrect =
-        selectedWord[cellIndex].toLowerCase() === children.toLowerCase();
-
     let style = "";
-    if ((!playing && rowIndex <= currentGuessIndex) || (rowDone && included)) {
+    if (rowDone) {
         style = "active ";
+
         if (positionCorrect) {
-            style += "bg-emerald-400";
+            style += "bg-emerald-500 dark:bg-emerald-400";
         } else if (included) {
-            style += "bg-amber-400";
+            style += "bg-amber-500 dark:bg-amber-400";
+        } else {
+            style += "bg-slate-500 dark:bg-slate-400";
         }
     }
 
