@@ -3,19 +3,20 @@ import {
     deleteCharacter,
     endGame,
     nextGuess,
+    typeCharacter,
     selectCurrentGuess,
-    selectGuesses,
     selectGuessNumber,
     selectPlaying,
     selectSelectedWord,
-    typeCharacter,
 } from "./Redux/wordle/wordleSlice";
 import { pushNotification } from "./Redux/notification/notificationSlice";
+import { selectMode } from "./Redux/site/siteSlice";
 
 import GuessGrid from "./components/GuessGrid";
 import Keyboard from "./components/Keyboard";
 import Notification from "./components/Notification";
 import ResultModal from "./components/ResultModal";
+import Header from "./components/Header";
 
 export default function App() {
     const dispatch = useAppDispatch();
@@ -23,6 +24,7 @@ export default function App() {
     const currentGuess = useAppSelector(selectCurrentGuess);
     const selectedWord = useAppSelector(selectSelectedWord);
     const guessNumber = useAppSelector(selectGuessNumber);
+    const themeMode = useAppSelector(selectMode);
 
     function onCharacter(char: string) {
         dispatch(typeCharacter(char));
@@ -84,19 +86,20 @@ export default function App() {
     }
 
     return (
-        <main className="flex flex-col items-center justify-between p-4 min-h-screen">
-            <>
-                <GuessGrid />
-                <Keyboard
-                    onCharacterClick={onCharacter}
-                    onBackspaceClick={onBackspace}
-                    onEnterClick={onEnter}
-                />
-            </>
-
-            {!playing && <ResultModal />}
-
-            <Notification />
-        </main>
+        <div className={`${themeMode === "dark" ? "dark" : ""}`}>
+            <div className="grid grid-rows-[auto,1fr] gap-8 md:gap-16 p-4 min-h-screen bg-white dark:bg-black">
+                <Header />
+                <main className="flex flex-col items-center justify-between gap-8 md:gap-16">
+                    <GuessGrid />
+                    <Keyboard
+                        onCharacterClick={onCharacter}
+                        onBackspaceClick={onBackspace}
+                        onEnterClick={onEnter}
+                    />
+                </main>
+                {!playing && <ResultModal />}
+                <Notification />
+            </div>
+        </div>
     );
 }

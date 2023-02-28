@@ -24,7 +24,7 @@ export default function Notification() {
 
     return createPortal(
         <div
-            className={`fixed top-2 left-1/2 -translate-x-1/2 shadow-xl py-6 px-2 w-full max-w-lg rounded-lg text-white font-bold ${
+            className={`fixed z-10 top-2 left-1/2 -translate-x-1/2 shadow-xl py-6 px-2 w-full max-w-lg rounded-lg text-white font-bold ${
                 type === "error" ? "bg-rose-700" : "bg-emerald-700"
             }`}
         >
